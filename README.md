@@ -9,3 +9,55 @@ Please follow the installing instructions on their wegraphage before using this 
 ```shell
 python visualise.py -i /path/to/matrix.txt -o drawn_graph.png
 ```
+## Examples
+
+##### First example
+Given the following matrix:
+```
+14 12
+1     0     0     0      0      0      0      0      0      0      0      0 
+0     0     1     0      0      1      0      0      0      0      0      0 
+0     0     0     1      0      0      0      0      0      0      0      0 
+0     0     0     0      1      0      0      0      0      0      0      0 
+1     1     0     0      0      1      0      1      0      0      0      0 
+0     0     0     1      0      0      0      0      1      0      0      0 
+0     0     0     0      1      0      1      0      0      1      0      0 
+0     0     0     0      0      0      0      0      1      0      0      0 
+0     0     0     0      0      0      0      0      0      1      0      0 
+0     0     0     0      0      0      0      1      1      0      1      0 
+0     0     0     0      0      0      0      0      0      1      0      1 
+0     0     0     0      0      0      0      0      0      0      1      0 
+0     0     0     0      0      0      0      0      0      0      1      1 
+0     0     0     0      0      1      0      0      0      0      0      0 
+```
+
+The generated factor graph is:
+
+<img src="examples/example_01/result.png" width="250">
+
+##### Second example
+Given the following matrix:
+
+```
+1         0         0         0         0         0         1         0         0
+0         1         0         0         0         0         0         0         0
+0         0         0         0         1         0         0         0         0
+0         0         0         0         0         1         0         1         0
+0         0         0         0         0         0         1         0         0
+1         1         1         1         0         0         0         0         0
+0         1         1         0         0         0         0         0         0
+0         1         0         1         1         0         0         0         0
+0         0         0         1         1         0         0         0         0
+0         0         0         0         0         1         1         0         0
+0         0         0         0         1         0         0         0         1
+0         0         0         0         1         0         0         0         0
+0         0         0         0         1         0         0         0         0
+0         0         1         0         0         0         0         1         0
+1         0         0         1         0         0         0         0         0
+0         1         0         1         0         0         0         0         0
+0         1         0         0         0         0         0         0         0
+```
+
+The generated factor graph is:
+
+<img src="examples/example_02/result.png" width="250">
