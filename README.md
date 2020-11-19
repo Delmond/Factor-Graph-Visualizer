@@ -56,8 +56,8 @@ Given the following matrix:
 1         0         0         1         0         0         0         0         0
 0         1         0         1         0         0         0         0         0
 0         1         0         0         0         0         0         0         0
+```
 
 The generated factor graph is:
 
-```
 <img src="examples/example_02/result.png" width="250">
