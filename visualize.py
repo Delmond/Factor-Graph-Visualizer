@@ -123,22 +123,22 @@ def main():
         mapping = None
 
 
-    bp = Graph()
-    bp.add_vertex(height + width)
+    graph = Graph()
+    graph.add_vertex(height + width)
 
-    shape = bp.new_vertex_property("string")
-    color = bp.new_vertex_property("string")
-    index = bp.new_vertex_property("string")
+    shape = graph.new_vertex_property("string")
+    color = graph.new_vertex_property("string")
+    index = graph.new_vertex_property("string")
 
 
     for i in range(height):
-        v = bp.vertex(i)
+        v = graph.vertex(i)
         shape[v] = "square"
         color[v] = "red"
         index[v] = str(i)
 
     for i in range(width):
-        v = bp.vertex(height + i)
+        v = graph.vertex(height + i)
         shape[v] = "circle"
         if mapping is not None:
             color[v] = COLORS[mapping[i] % len(COLORS)]
@@ -150,20 +150,20 @@ def main():
         for j in range(width):
             if abs(matrix[i][j]) < EPSILON:
                 continue
-            bp.add_edge(bp.vertex(i), bp.vertex(height + j))
+            graph.add_edge(graph.vertex(i), graph.vertex(height + j))
 
-    bp.set_directed(False)
+    graph.set_directed(False)
 
     if mapping is not None:
-        groups = bp.new_vertex_property("int")
+        groups = graph.new_vertex_property("int")
         for i in range(width):
-            v = bp.vertex(height + i)
+            v = graph.vertex(height + i)
             groups[v] = mapping[i]
-        position = sfdp_layout(bp, groups=groups)
+        position = sfdp_layout(graph, groups=groups)
     else:
         position = None
 
-    graph_draw(bp,
+    graph_draw(graph,
         pos=position,
         vertex_text=index,
         vertex_shape=shape,
