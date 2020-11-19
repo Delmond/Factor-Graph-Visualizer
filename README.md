@@ -9,3 +9,26 @@ Please follow the installing instructions on their webpage before using this scr
 ```shell
 python visualise.py -i /path/to/matrix.txt -o drawn_graph.png
 ```
+## Examples:
+Given the following input:
+```
+14 12
+1     0     0     0      0      0      0      0      0      0      0      0 
+0     0     1     0      0      1      0      0      0      0      0      0 
+0     0     0     1      0      0      0      0      0      0      0      0 
+0     0     0     0      1      0      0      0      0      0      0      0 
+1     1     0     0      0      1      0      1      0      0      0      0 
+0     0     0     1      0      0      0      0      1      0      0      0 
+0     0     0     0      1      0      1      0      0      1      0      0 
+0     0     0     0      0      0      0      0      1      0      0      0 
+0     0     0     0      0      0      0      0      0      1      0      0 
+0     0     0     0      0      0      0      1      1      0      1      0 
+0     0     0     0      0      0      0      0      0      1      0      1 
+0     0     0     0      0      0      0      0      0      0      1      0 
+0     0     0     0      0      0      0      0      0      0      1      1 
+0     0     0     0      0      1      0      0      0      0      0      0 
+```
+
+The generated factor graph is:
+
+<img src="examples/example_01/result.png" width="250">
