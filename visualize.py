@@ -59,6 +59,12 @@ def parse_arguments():
                         type=str,
                         default="result.png"
                        )
+    parser.add_argument("--merge",
+                        help="Merge all nodes from one cluster into one node to show the edges between clusters.",
+                        action="store_true",
+                        default=False
+                       )
+
 
     args, _ = parser.parse_known_args()
 
@@ -66,12 +72,13 @@ def parse_arguments():
         "has_size": args.no_size,
         "matrix_location": args.input,
         "mapping_location": args.mapping,
-        "output_file": args.output
+        "output_file": args.output,
+        "should_merge": args.merge
     }
 
     return options
 
-def parse_input(content, has_size):
+def parse_matrix(content, has_size):
 
     assert content != '', "Input/Pipe is empty, aborting..."
 
@@ -101,8 +108,69 @@ def parse_mapping(content, has_size):
        assert height == len(mapping) or width == len(mapping), "Incorrect mapping size..."
     return mapping
 
+
+def compare_lists(first_list, second_list):
+    if len(first_list) != len(second_list):
+        return False
+
+    for first, second in zip(first_list, second_list):
+        if first != second:
+            return False
+    return True
+
+def merge_clusters(matrix, mapping):
+    clusters = set(mapping)
+    row_to_clusters = []
+    for row in matrix:
+        connects_clusters = set()
+        for index, element in enumerate(row):
+            if abs(element) < 1e-7:
+                continue
+            connects_clusters.add(mapping[index])
+        row_to_clusters.append(list(connects_clusters))
+    
+    # Remove edges which contan only one cluster
+    edges = list(map(sorted, filter(lambda row: len(row) != 1, row_to_clusters)))
+    
+    unique_edges = []
+
+    for edge in edges:
+        unique = True
+        for u_edge in unique_edges:
+            if compare_lists(edge, u_edge):
+                unique = False
+                break
+        
+        if unique:
+            unique_edges.append(list(edge))
+
+    # Construct matrix
+    mapping = list(clusters)
+    matrix = []
+
+    lookup = {}
+    for index, cluster in enumerate(mapping):
+        lookup[cluster] = index
+
+    height = len(unique_edges)
+    width = len(mapping)
+
+    for u_edge in unique_edges:
+        edge = [0] * width
+        for element in u_edge:
+            edge[lookup[element]] = 1
+        matrix.append(edge)
+
+    return height, width, matrix, mapping
+
 def main():
     options = parse_arguments()
+
+
+    clusters_enabled = options["mapping_location"] is not None
+
+    if options["should_merge"] and not clusters_enabled:
+        raise "You need to provide a mapping to use merged view.`"
 
     # Get the string containing the input matrix form a file/pipe
     if options["matrix_location"] is not None:
@@ -112,10 +180,10 @@ def main():
         matrix_string = sys.stdin
 
     # Parse the input matrix string
-    height, width, matrix = parse_input(matrix_string, options["has_size"])
-
+    height, width, matrix = parse_matrix(matrix_string, options["has_size"])
+    
     # Get the string containing the mapping if specified
-    if options["mapping_location"] is not None:
+    if clusters_enabled:
         with open(options["mapping_location"], 'r') as file:
             mapping_string = file.read().strip()
         mapping = parse_mapping(mapping_string, options["has_size"])
@@ -123,6 +191,9 @@ def main():
         mapping = None
 
 
+    if options["should_merge"]:
+        height, width, matrix, mapping = merge_clusters(matrix, mapping)
+    
     graph = Graph()
     graph.add_vertex(height + width)
 
@@ -140,7 +211,7 @@ def main():
     for i in range(width):
         v = graph.vertex(height + i)
         shape[v] = "circle"
-        if mapping is not None:
+        if clusters_enabled:
             color[v] = COLORS[mapping[i] % len(COLORS)]
         else:
             color[v] = COLORS[0]
@@ -154,7 +225,7 @@ def main():
 
     graph.set_directed(False)
 
-    if mapping is not None:
+    if clusters_enabled:
         groups = graph.new_vertex_property("int")
         for i in range(width):
             v = graph.vertex(height + i)
