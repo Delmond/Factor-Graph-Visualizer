@@ -128,10 +128,9 @@ def merge_clusters(matrix, mapping):
                 continue
             connects_clusters.add(mapping[index])
         row_to_clusters.append(list(connects_clusters))
-    
+
     # Remove edges which contan only one cluster
     edges = list(map(sorted, filter(lambda row: len(row) != 1, row_to_clusters)))
-    
     unique_edges = []
 
     for edge in edges:
@@ -140,7 +139,6 @@ def merge_clusters(matrix, mapping):
             if compare_lists(edge, u_edge):
                 unique = False
                 break
-        
         if unique:
             unique_edges.append(list(edge))
 
@@ -181,7 +179,7 @@ def main():
 
     # Parse the input matrix string
     height, width, matrix = parse_matrix(matrix_string, options["has_size"])
-    
+
     # Get the string containing the mapping if specified
     if clusters_enabled:
         with open(options["mapping_location"], 'r') as file:
@@ -193,7 +191,7 @@ def main():
 
     if options["should_merge"]:
         height, width, matrix, mapping = merge_clusters(matrix, mapping)
-    
+
     graph = Graph()
     graph.add_vertex(height + width)
 
